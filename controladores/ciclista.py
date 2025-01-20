@@ -1,7 +1,18 @@
 from datetime import datetime
 from flask import  request, jsonify
-from model.db_models import Ciclista,Pais, db 
+from model.db_models import Ciclista,Pais, db, Director
 from sqlalchemy import and_
+
+#Listar Direcores
+def get_directores():
+    directores = Director.query.all()
+    return jsonify({'directores': [director.serialize() for director  in directores ]})
+
+
+#devolver paisese cargados en la BD
+def get_paises() :
+    paises = Pais.query.all()
+    return jsonify({'paises': [pais.serialize() for pais in paises]})
 
 #Listar 
 def get_ciclistas():
@@ -11,7 +22,7 @@ def get_ciclistas():
 #Crear 
 def crear_ciclista():
     data = request.get_json()
-
+    print(data)
     # Convertir edad a entero
     edad = int(data['edad'])
     # Buscar si el país ya existe
@@ -56,10 +67,6 @@ def buscar_ciclistas(nombre, apellido):
         return jsonify({'message': 'No se encontraron ciclistas con ese nombre y apellido'}), 404
     return jsonify([ciclista.serialize() for ciclista in ciclistas])
 
-#devolver paisese cargados en la BD
-def get_paises() :
-    paises = Pais.query.all()
-    return jsonify({'paises': [pais.serialize() for pais in paises]})
 
 
 def update_ciclista(id):    

@@ -42,13 +42,16 @@ class Equipo(db.Model):
 
     pais = db.relationship('Pais', backref='equipos')
     director = db.relationship('Director', backref='equipos')
+    contratos = db.relationship('Contrato', backref='equipo', lazy=True) #new
 
     def serialize(self):
         return {
             'id': self.id,
             'nombre': self.nombre,
             'pais': self.pais.serialize(),
-            'director': self.director.serialize()
+            'director': self.director.serialize(),
+            'contratos': [contrato.serialize() for contrato in self.contratos],
+            'ciclistas': [contrato.ciclista.serialize() for contrato in self.contratos]  # Extrae ciclistas desde los contratos
         }
 
 # Modelo para la tabla Director
@@ -67,12 +70,13 @@ class Director(db.Model):
 # Modelo para la tabla Contrato
 class Contrato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fechaInicio = db.Column(db.Date, nullable=False)
-    fechaFin = db.Column(db.Date, nullable=False)
     equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=False)
     ciclista_id = db.Column(db.Integer, db.ForeignKey('ciclista.id'), nullable=False)
+    fechaInicio = db.Column(db.Date, nullable=False)
+    fechaFin = db.Column(db.Date, nullable=False)
 
-    equipo = db.relationship('Equipo', backref='contratos')
+
+    #equipo = db.relationship('Equipo', backref='contratos')
     ciclista = db.relationship('Ciclista', backref='contratos')
 
     def serialize(self):

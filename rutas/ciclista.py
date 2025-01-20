@@ -36,3 +36,8 @@ def buscar_NyA(nombre,apellido):
 @ciclista.route('/paises', methods =['GET'])
 def devolver_paises():
     return get_paises()
+
+#listar directores en BD
+@ciclista.route('/directores', methods =['GET'])
+def devolver_directores():
+    return get_directores()
